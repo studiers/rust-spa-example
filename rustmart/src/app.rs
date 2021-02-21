@@ -1,3 +1,4 @@
+use crate::pages::ProductDetail;
 use yew::prelude::*;
 use yew_router::prelude::*;
 
@@ -25,6 +26,7 @@ impl Component for App {
     fn view(&self) -> Html {
         let render = Router::render(|switch: Route| match switch {
             Route::HomePage => html! {<Home/>},
+            Route::ProductDetail(id) => html! {<ProductDetail id={id}/>},
         });
 
         html! {

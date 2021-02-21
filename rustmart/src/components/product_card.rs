@@ -19,7 +19,7 @@ impl Component for ProductCard {
         Self { props }
     }
 
-    fn update(&mut self, message: Self::Message) -> ShouldRender {
+    fn update(&mut self, _: Self::Message) -> ShouldRender {
         true
     }
 
