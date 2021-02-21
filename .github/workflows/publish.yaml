@@ -19,3 +19,4 @@ jobs:
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: rustmart/static # The folder the action should deploy.
+          ssh-key: ${{ secrets.GIT_DEPLOY_KEY }}
