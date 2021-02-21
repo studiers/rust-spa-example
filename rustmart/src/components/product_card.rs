@@ -1,6 +1,8 @@
 use crate::components::atc_button::AtcButton;
+use crate::route::Route;
 use crate::types::Product;
 use yew::prelude::*;
+use yew_router::prelude::RouterAnchor;
 
 pub struct ProductCard {
     props: Props,
@@ -32,10 +34,12 @@ impl Component for ProductCard {
         let product = &self.props.product;
         html! {
           <div id={product.id}>
-            <img src={&product.image}/>
-            <div>{"Name: "}{&product.name}</div>
-            <div>{"Description: "}{&product.description}</div>
-            <div>{"Price: $"}{&product.price}</div>
+            <RouterAnchor<Route> route=Route::ProductDetail(self.props.product.id)>
+                <img src={&product.image}/>
+                <div>{"Name: "}{&product.name}</div>
+                <div>{"Description: "}{&product.description}</div>
+                <div>{"Price: $"}{&product.price}</div>
+            </RouterAnchor<Route>>
             <AtcButton product={self.props.product.clone()} on_add_to_cart=self.props.on_add_to_cart.clone() />
           </div>
         }
