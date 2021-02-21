@@ -1,0 +1,19 @@
+on: push
+name: Publish
+jobs:
+  job:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install toolcahin
+        uses: actions-rs/toolchain@v1.0.6
+      - name: Install wasm-pack
+        run: cargo install wasm-pack
+      - name: Build
+        run: cargo build --target web --out-name wasm --out-dir ./static
+        working-directory: rustmart
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.0.0
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: rustmart/static # The folder the action should deploy.
