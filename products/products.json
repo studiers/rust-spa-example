@@ -1,0 +1,23 @@
+[
+    {
+        "id": 0,
+        "name": "Apple",
+        "description": "An apple a day keeps the doctor away",
+        "image": "https://picsum.photos/200/300#0",
+        "price": 3.65
+    },
+    {
+        "id": 1,
+        "name": "Banana",
+        "description": "An old banana leaf was once young and green",
+        "image": "https://picsum.photos/200/300#1",
+        "price": 7.99
+    },
+    {
+        "id": 2,
+        "name": "Melon",
+        "description": "A tasty melon.",
+        "image": "https://picsum.photos/200/300#2",
+        "price": 8.45
+    }
+]
