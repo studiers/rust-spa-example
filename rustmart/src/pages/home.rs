@@ -8,19 +8,24 @@ use yew::services::fetch::FetchTask;
 
 struct State {
     products: Vec<Product>,
-    cart_products: Vec<CartProduct>,
     get_products_error: Option<Error>,
     get_products_loaded: bool,
 }
 
 pub struct Home {
+    props: Props,
     state: State,
     link: ComponentLink<Self>,
     task: Option<FetchTask>,
 }
 
+#[derive(Properties, Clone)]
+pub struct Props {
+    pub cart_products: Vec<CartProduct>,
+    pub on_add_to_cart: Callback<Product>,
+}
+
 pub enum Msg {
-    AddToCart(i32),
     GetProducts,
     GetProductsSuccess(Vec<Product>),
     GetProductsError(Error),
@@ -28,18 +33,17 @@ pub enum Msg {
 
 impl Component for Home {
     type Message = Msg;
-    type Properties = ();
+    type Properties = Props;
 
-    fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
+    fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
         let products: Vec<Product> = vec![];
-        let cart_products = vec![];
 
         link.send_message(Msg::GetProducts);
 
         Self {
+            props: props,
             state: State {
                 products,
-                cart_products,
                 get_products_error: None,
                 get_products_loaded: false,
             },
@@ -74,32 +78,11 @@ impl Component for Home {
                 self.state.get_products_loaded = true;
                 true
             }
-            Msg::AddToCart(product_id) => {
-                let product = self
-                    .state
-                    .products
-                    .iter()
-                    .find(|p: &&Product| p.id == product_id)
-                    .unwrap();
-                let cart_product = self
-                    .state
-                    .cart_products
-                    .iter_mut()
-                    .find(|cp: &&mut CartProduct| cp.product.id == product_id);
-                if let Some(cp) = cart_product {
-                    cp.quantity += 1;
-                } else {
-                    self.state.cart_products.push(CartProduct {
-                        product: product.clone(),
-                        quantity: 1,
-                    })
-                }
-                true
-            }
         }
     }
 
-    fn change(&mut self, _: Self::Properties) -> ShouldRender {
+    fn change(&mut self, props: Self::Properties) -> ShouldRender {
+        self.props = props;
         true
     }
 
@@ -109,17 +92,11 @@ impl Component for Home {
             .products
             .iter()
             .map(|product: &Product| {
-                let product_id = product.id;
                 html! {
-                    <ProductCard product={product} on_add_to_cart={self.link.callback(move |_| Msg::AddToCart(product_id))}/>
+                    <ProductCard product={product} on_add_to_cart=self.props.on_add_to_cart.clone()/>
                 }
             })
             .collect();
-        let cart_value = self
-            .state
-            .cart_products
-            .iter()
-            .fold(0.0, |acc, cp| acc + (cp.quantity as f64 * cp.product.price));
 
         if !self.state.get_products_loaded {
             html! {
@@ -133,10 +110,7 @@ impl Component for Home {
             }
         } else {
             html! {
-                <div>
-                    <span>{format!("Cart Value: {:.2}", cart_value)}</span>
-                    <span>{products}</span>
-                </div>
+                <div>{products}</div>
             }
         }
     }

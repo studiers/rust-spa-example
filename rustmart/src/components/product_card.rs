@@ -1,3 +1,4 @@
+use crate::components::atc_button::AtcButton;
 use crate::types::Product;
 use yew::prelude::*;
 
@@ -8,7 +9,7 @@ pub struct ProductCard {
 #[derive(Properties, Clone)]
 pub struct Props {
     pub product: Product,
-    pub on_add_to_cart: Callback<()>,
+    pub on_add_to_cart: Callback<Product>,
 }
 
 impl Component for ProductCard {
@@ -29,14 +30,13 @@ impl Component for ProductCard {
 
     fn view(&self) -> Html {
         let product = &self.props.product;
-        let onclick = self.props.on_add_to_cart.reform(|_| ());
         html! {
           <div id={product.id}>
             <img src={&product.image}/>
             <div>{"Name: "}{&product.name}</div>
             <div>{"Description: "}{&product.description}</div>
             <div>{"Price: $"}{&product.price}</div>
-            <button onclick=onclick>{"Add To Cart"}</button>
+            <AtcButton product={self.props.product.clone()} on_add_to_cart=self.props.on_add_to_cart.clone() />
           </div>
         }
     }
